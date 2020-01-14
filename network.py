@@ -53,7 +53,7 @@ class OurNeuralNetwork:
       Elements in all_y_trues correspond to those in data.
     '''
     learn_rate = 0.1
-    epochs = 1000 # number of times to loop through the entire dataset
+    epochs = 1000000 # number of times to loop through the entire dataset
 
     for epoch in range(epochs):
       for x, y_true in zip(data, all_y_trues):
@@ -107,31 +107,63 @@ class OurNeuralNetwork:
         self.b3 -= learn_rate * d_L_d_ypred * d_ypred_d_b3
 
       # --- Calculate total loss at the end of each epoch
-      if epoch % 10 == 0:
+      if epoch % 1000 == 0:
         y_preds = np.apply_along_axis(self.feedforward, 1, data)
         loss = mse_loss(all_y_trues, y_preds)
-        print("Epoch %d loss: %.3f" % (epoch, loss))
+        print("Epoch %d loss: %.6f" % (epoch, loss))
 
 # Define dataset
 data = np.array([
-  [-2, -1],  # Alice
-  [25, 6],   # Bob
-  [17, 4],   # Charlie
-  [-15, -6], # Diana
+  [0.75, 2],
+  [1.0, 2],
+  [1.25, 2],
+  [1.5, 2],
+  [1.75, 2],
+  [1.0, 4],
+  [1.25, 4],
+  [1.5, 4],
+  [1.75, 4],  
+  [2.0, 4],  
 ])
-all_y_trues = np.array([
-  1, # Alice
-  0, # Bob
-  0, # Charlie
-  1, # Diana
+all_y_trues = np.array([  
+0,
+0.444444444,
+0.777777778,
+0.888888889,
+1,
+0.222222222,
+0.555555556,
+0.666666667,
+0.888888889,
+1,
 ])
+    
+'''
+  15.0,
+  19.0,
+  22.0,
+  23.0,
+  24.0,
+  17.0,
+  20.0,
+  21.0,  
+  23.0,
+  24.0, 
+'''
+  
 
 # Train our neural network!
 network = OurNeuralNetwork()
 network.train(data, all_y_trues)
 
 # Make some predictions
-emily = np.array([-7, -3]) # 128 pounds, 63 inches
-frank = np.array([20, 2])  # 155 pounds, 68 inches
-print("Emily: %.3f" % network.feedforward(emily)) # 0.951 - F
-print("Frank: %.3f" % network.feedforward(frank)) # 0.039 - M
+Case1 = np.array([1.15, 2]) # 128 pounds, 63 inches
+Case2 = np.array([1.65, 4])  # 155 pounds, 68 inches
+print("Case 1: %.3f" % (network.feedforward(Case1)*9.0 + 15.0))
+print("Case 2: %.3f" % (network.feedforward(Case2)*9.0 + 15.0))
+
+Case1_result = -9.1429*Case1[0]*Case1[0] + 31.657*Case1[0] - 3.5429
+#Case1_result_std = (Case1_result - 15.0) / (24.0 - 15.0)
+Case2_result = -3.4286*Case2[0]*Case2[0] + 17.086*Case2[0] + 3.5143
+#Case2_result_std = (Case2_result - 15.0) / (24.0 - 15.0)
+print Case1_result, Case2_result
